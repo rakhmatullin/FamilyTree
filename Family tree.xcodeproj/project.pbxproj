@@ -46,7 +46,6 @@
 		966CEC9E28C8DB8900A9EFF4 = {
 			isa = PBXGroup;
 			children = (
-				966CECE728CE39F400A9EFF4 /* PersonPresenter.swift */,
 				966CECA928C8DB8900A9EFF4 /* Family tree */,
 				966CECA828C8DB8900A9EFF4 /* Products */,
 			);
@@ -63,6 +62,7 @@
 		966CECA928C8DB8900A9EFF4 /* Family tree */ = {
 			isa = PBXGroup;
 			children = (
+				966CECE728CE39F400A9EFF4 /* PersonPresenter.swift */,
 				966CECAA28C8DB8900A9EFF4 /* AppDelegate.swift */,
 				966CECAC28C8DB8900A9EFF4 /* SceneDelegate.swift */,
 				966CECAE28C8DB8900A9EFF4 /* PersonViewController.swift */,

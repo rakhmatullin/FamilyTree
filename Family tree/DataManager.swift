@@ -16,8 +16,14 @@ struct HumanPair: Hashable {
 }
 
 class DataManager {
+    
     static func getNewID() -> Int {
-        if let
+        let ids = getIDs()
+        if let lastID = ids.last {
+            return lastID + 1
+        } else {
+            return 0
+        }
     }
     
     static func getPerson(by id: Int) -> Person {

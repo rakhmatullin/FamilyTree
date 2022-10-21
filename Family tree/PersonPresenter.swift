@@ -18,7 +18,8 @@ class PersonPresenter: PersonPresenterProtocol {
         if allIds.count != 0 {
             personId = allIds[0]
         } else {
-            
+            personId = DataManager.getNewID()
+            DataManager.add(ID: personId)
         }
     }
     
@@ -27,11 +28,11 @@ class PersonPresenter: PersonPresenterProtocol {
     }
     
     func getParents() -> [Person] {
-        
+        []
     }
     
     func getChildren() -> [Person] {
-        
+        []
     }
     
 }
