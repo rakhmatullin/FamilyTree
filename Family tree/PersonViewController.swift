@@ -45,7 +45,7 @@ extension PersonViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = HumanTableViewCell()
-        cell.set(text: "123")
+        cell.set(text: "12")
         return cell
     }
     
