@@ -4,6 +4,7 @@ class PersonViewController: UIViewController {
     weak var presenter: PersonPresenterProtocol!
     
     let tableView = UITableView()
+    let nameLabel = UILabel()
     
     var person: Person
     var personChildren: [Person]
@@ -11,10 +12,10 @@ class PersonViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(tableView)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.pinEdges(to: view)
-        tableView.dataSource = self
+        setupView()
+        addSubviews()
+        setupConstraints()
+        setupSubviews()
     }
     
     convenience init() {
@@ -31,6 +32,38 @@ class PersonViewController: UIViewController {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
+    }
+    
+    private func setupView() {
+        view.backgroundColor = .systemBackground
+    }
+    private func addSubviews() {
+        view.addSubview(nameLabel)
+        view.addSubview(tableView)
+    }
+    
+    private func setupConstraints() {
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: STANDART_SPACE).isActive = true
+        nameLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -STANDART_SPACE).isActive = true
+        nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: STANDART_SPACE).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: STANDART_SPACE).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -STANDART_SPACE).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+    }
+    
+    private func setupSubviews() {
+        nameLabel.text = person.name
+        nameLabel.backgroundColor = .systemBackground
+        nameLabel.textColor = .label
+        nameLabel.font = .systemFont(ofSize: 20)
+        nameLabel.numberOfLines = 0
+        
+        tableView.dataSource = self
+        
     }
     
     private func updateAndReloadData() {
@@ -83,6 +116,11 @@ extension PersonViewController: UITableViewDataSource {
         }
     }
     
+}
+
+// MARK: UI Constants
+extension PersonViewController {
+    var STANDART_SPACE: CGFloat { 10 }
 }
 
 extension UIView {
