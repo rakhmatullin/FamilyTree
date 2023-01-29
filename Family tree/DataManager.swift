@@ -71,6 +71,20 @@ class DataManager {
         set(IDs: getIDs() + [ID], persons: getPersons() + [person])
     }
     
+    static func change(ID: Int, person: Person) {
+        // var personIfExists = getPerson(by: ID)
+        let person = Person(id: ID, name: person.name, surname: person.surname, patronymic: person.patronymic)
+        var persons = getPersons()
+        for index in 0..<persons.count {
+            if persons[index].id == ID {
+                persons.remove(at: index)
+                break
+            }
+        }
+        let IDsContainsID = getIDs().contains(where: { $0 == ID })
+        set(IDs: IDsContainsID ? getIDs() : getIDs() + [ID], persons: persons + [person])
+    }
+    
     static func getPersons() -> [Person] {
         // Retrieve from UserDefaults
         if let data = UserDefaults.standard.object(forKey: "Persons") as? Data,

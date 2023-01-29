@@ -9,7 +9,12 @@ protocol PersonPresenterProtocol: AnyObject {
 }
 
 class PersonPresenter: PersonPresenterProtocol {
-    var personId: Int
+    weak var view: PersonVCProtocol?
+    var personId: Int {
+        didSet {
+            view?.updateAll()
+        }
+    }
     
     init(personId: Int) {
         self.personId = personId
