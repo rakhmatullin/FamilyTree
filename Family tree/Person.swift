@@ -1,6 +1,6 @@
 import Foundation
 
-class Person {
+class Person: Codable {
     let id: Int
     let name: String
     let surname: String

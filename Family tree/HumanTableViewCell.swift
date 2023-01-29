@@ -14,11 +14,11 @@ class HumanTableViewCell: UITableViewCell {
     }
     
     private func cellInit() {
+        backgroundColor = .secondarySystemGroupedBackground
         nameLabel.textColor = .label
         nameLabel.text = "Initial text"
         addSubview(nameLabel)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        //nameLabel.pinEdges(to: self)
         nameLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
         nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
