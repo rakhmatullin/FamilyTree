@@ -1,5 +1,9 @@
 import UIKit
 
+protocol PersonVCProtocol: AnyObject {
+    func updateAll()
+}
+
 class PersonViewController: UIViewController {
     var presenter: PersonPresenterProtocol {
         didSet {
@@ -36,6 +40,9 @@ class PersonViewController: UIViewController {
         self.personChildren = presenter.getChildren()
         self.partners = presenter.getPartners()
         super.init(nibName: nil, bundle: nil)
+        if let presenter_ = presenter as? PersonPresenter {
+            presenter_.view = self
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -115,8 +122,6 @@ class PersonViewController: UIViewController {
         let childrenTableViewHeightConstraint = childrenTableView.heightAnchor.constraint(equalToConstant: CGFloat(30 + children.count * 44))
         childrenTableViewHeightConstraint.priority = .defaultLow
         childrenTableViewHeightConstraint.isActive = true
-        // childrenTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-        //childrenTableView.heightAnchor.constraint(equalToConstant: CGFloat(30 + children.count * 44)).isActive = true
         childrenTableView.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor, multiplier: 0.2).isActive = true
         
         let emptyBottomView = UIView()
@@ -134,7 +139,7 @@ class PersonViewController: UIViewController {
         personParents = presenter.getParents()
         personChildren = presenter.getChildren()
         
-        person = presenter.getPerson()
+        // person = presenter.getPerson()
         nameLabel.text = person.name + " " + person.surname
         
         partnersTableView.reloadData()
@@ -143,12 +148,19 @@ class PersonViewController: UIViewController {
         parentsTableView.isHidden = personParents.count == 0
         childrenTableView.reloadData()
         childrenTableView.isHidden = personChildren.count == 0
+        view.setNeedsLayout()
         view.layoutIfNeeded()
     }
     
     @objc private func tappedHeadBackgroundButton() {
-        let alert = UIAlertController(title: "What do you want to edit?", message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Edit profile", style: .default) { _ in
+        let alert = UIAlertController(title: "What do you want to do?", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Add parents", style: .default) { _ in
+            let newPerson1 = DataManager.getPerson(by: nil)
+            let newPerson2 = DataManager.getPerson(by: nil)
+            var pairs = DataManager.getPairsWithChildren()
+            pairs[HumanPair(firstHuman: newPerson1.id, secondHuman: newPerson2.id)] = [self.person.id]
+            DataManager.set(pairsWithChildren: pairs)
+            self.updateAndReloadData()
         })
         alert.addAction(UIAlertAction(title: "Add partner", style: .default) { _ in
             let newPerson = DataManager.getPerson(by: nil)
@@ -157,9 +169,45 @@ class PersonViewController: UIViewController {
             DataManager.set(pairsWithChildren: pairs)
             self.updateAndReloadData()
         })
+        alert.addAction(UIAlertAction(title: "Edit profile", style: .default) { _ in
+            self.showEditProfileOptions()
+        })
         alert.addAction(.init(title: "Cancel", style: .cancel))
         present(alert, animated: true)
     }
+    
+    private func showEditProfileOptions() {
+        let alert = UIAlertController(title: "What do you want to edit?", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Name", style: .default) { _ in
+            self.showEditNameAlert()
+        })
+        alert.addAction(UIAlertAction(title: "Surname", style: .default) { _ in
+        })
+        alert.addAction(UIAlertAction(title: "Birthday", style: .default) { _ in
+        })
+        alert.addAction(.init(title: "Cancel", style: .cancel))
+        present(alert, animated: true)
+    }
+    
+    private func showEditNameAlert() {
+        let alert = UIAlertController(title: "What is new name?", message: nil, preferredStyle: .alert)
+        alert.addTextField { (textField) in
+            textField.text = "Some default text"
+        }
+        alert.addAction(UIAlertAction(title: "Update", style: .default) { _ in
+            guard let textField = alert.textFields![0].text else {
+                return
+            }// Force unwrapping because we know it exists.
+            // print("Text field: \(textField.text)")
+            let renamedPerson = DataManager.getPerson(by: self.person.id)
+            let newBrandPerson = Person(id: renamedPerson.id, name: textField, surname: renamedPerson.surname, patronymic: renamedPerson.patronymic)
+            DataManager.change(ID: self.person.id, person: newBrandPerson)
+            self.updateAndReloadData()
+        })
+        alert.addAction(.init(title: "Cancel", style: .cancel))
+        present(alert, animated: true)
+    }
+    
     
 }
 
@@ -251,6 +299,12 @@ extension PersonViewController: UITableViewDelegate {
             updateAndReloadData()
         default: break
         }
+    }
+}
+
+extension PersonViewController: PersonVCProtocol {
+    func updateAll() {
+        updateAndReloadData()
     }
 }
 
