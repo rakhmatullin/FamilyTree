@@ -17,29 +17,68 @@ struct HumanPair: Hashable {
 
 class DataManager {
     
-    static func getNewID() -> Int {
-        let ids = getIDs()
-        if let lastID = ids.last {
-            return lastID + 1
-        } else {
-            return 0
-        }
+    private static func getNewID() -> Int {
+        let IDs = getIDs()
+        let newID = IDs.last != nil ? IDs.last! + 1 : 0
+        set(IDs: IDs + [newID], persons: getPersons())
+        return newID
     }
     
-    static func getPerson(by id: Int) -> Person {
-        Person(id: id)
+    static func getPerson(by id: Int?) -> Person {
+        guard let id = id, getIDs().contains(where: {$0 == id}) else {
+            let newId = getNewID()
+            let newPerson = Person(id: newId, name: "Person", surname: "Number \(newId)")
+            add(ID: newId, person: newPerson)
+            return newPerson
+        }
+        for person in getPersons() {
+            if person.id == id {
+                return person
+            }
+        }
+        let newId = getNewID()
+        let newPerson = Person(id: newId, name: "Person", surname: "Number \(newId)")
+        add(ID: newId, person: newPerson)
+        return newPerson
+    }
+    
+    static func getPartners(for id: Int) -> [Person] {
+        var partners: [Person] = []
+        let pairsWithChildren = getPairsWithChildren()
+        for key in pairsWithChildren.keys {
+            guard let _ = pairsWithChildren[key]
+            else { continue }
+            
+            partners.append(key.firstHuman != id ? DataManager.getPerson(by: key.firstHuman) : DataManager.getPerson(by: key.secondHuman))
+        }
+        return partners
     }
     
     static func getIDs() -> [Int] {
-        return UserDefaults.standard.array(forKey: "IDs") as? [Int] ?? []
+        UserDefaults.standard.array(forKey: "IDs") as? [Int] ?? []
     }
     
-    static private func set(IDs: [Int]) {
+    static private func set(IDs: [Int], persons: [Person]) {
         UserDefaults.standard.set(IDs, forKey: "IDs")
+        // To store in UserDefaults
+        if let encoded = try? JSONEncoder().encode(persons) {
+            UserDefaults.standard.set(encoded, forKey: "Persons")
+        }
+        //UserDefaults.standard.set(persons, forKey: "Persons")
     }
     
-    static func add(ID: Int) {
-        set(IDs: getIDs() + [ID])
+    static func add(ID: Int, person: Person) {
+        set(IDs: getIDs() + [ID], persons: getPersons() + [person])
+    }
+    
+    static func getPersons() -> [Person] {
+        // Retrieve from UserDefaults
+        if let data = UserDefaults.standard.object(forKey: "Persons") as? Data,
+           let persons = try? JSONDecoder().decode([Person].self, from: data) {
+            return persons
+        }
+        return []
+        //UserDefaults.standard.array(forKey: "Persons") as? [Person] ?? []
     }
     
     static func set(pairsWithChildren: [HumanPair: [Int]]) {
@@ -91,13 +130,13 @@ class DataManager {
     
     static func add(child: Int, to: (Int, Int)) {
         if !getIDs().contains(child) {
-            add(ID: child)
+            add(ID: child, person: getPerson(by: child))
         }
         if !getIDs().contains(to.0) {
-            add(ID: to.0)
+            add(ID: to.0, person: getPerson(by: to.0))
         }
         if !getIDs().contains(to.1) {
-            add(ID: to.1)
+            add(ID: to.1, person: getPerson(by: to.1))
         }
         
         var pairsWithChildren = getPairsWithChildren()

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "PersonViewController.init(presenter:):PersonViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "presenter.getChildren()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "PersonViewController.updateAndReloadData():PersonViewController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "PersonPresenter.init():PersonPresenter.swift">
+      </ContextState>
+      <ContextState
+         contextName = "PersonViewController.tableView(_:numberOfRowsInSection:):PersonViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "tableView.tag">
+            </PersistentString>
+            <PersistentString
+               value = "presenter">
+            </PersistentString>
+            <PersistentString
+               value = "personParents.count">
+            </PersistentString>
+            <PersistentString
+               value = "personChildren.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "PersonPresenter.getPerson():PersonPresenter.swift">
+      </ContextState>
+      <ContextState
+         contextName = "PersonViewController.addSubviews():PersonViewController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "PersonViewController.tableView(_:didSelectRowAt:):PersonViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "person">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static DataManager.getPerson(by:):DataManager.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "getPersons()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "PersonViewController.tableView(_:cellForRowAt:):PersonViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "tableView.tag">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
